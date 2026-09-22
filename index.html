@@ -32,14 +32,13 @@
     <section class="upload">
         <strong>Subí una foto tuya con el documento firmado POR FAVOR</strong><br>
         <input id="photoInput" type="file" accept="image/*" multiple>
-        <div class="note">Las fotos se guardan solamente en este navegador. Para que todos los visitantes puedan ver las mismas fotos hace falta conectar un servicio externo de almacenamiento.</div>
+        <div class="note">Las fotos se guardan en Supabase y quedan visibles para todos los visitantes. Máximo 8 MB por foto.</div>
         <div id="gallery"></div>
     </section>
 </main>
 
 <footer class="footer">BRUTO // BOB CROUS // 2026</footer>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="gallery.js"></script>
+<script type="module" src="gallery.js"></script>
 </body>
 </html>

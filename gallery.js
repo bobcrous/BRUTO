@@ -1,3 +1,5 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
 const SUPABASE_URL = "https://atnozmponplxkvjxtpoh.supabase.co";
 const SUPABASE_KEY = "sb_publishable_BVHpKtkxDvEDPw6GiYbgzQ_S-t5tvKP";
 const BUCKET = "bruto-fotos";
@@ -10,7 +12,7 @@ const status = document.createElement("div");
 status.className = "upload-status";
 input.insertAdjacentElement("afterend", status);
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 function setStatus(message, isError = false) {
     status.textContent = message;
@@ -30,8 +32,8 @@ async function render() {
 
     if (error) {
         gallery.innerHTML = "<div class=\"gallery-loading\">NO SE PUDIERON CARGAR LAS FOTOS.</div>";
-        setStatus("Revisá que el bucket y las políticas de Supabase estén configurados.", true);
-        console.error(error);
+        setStatus("ERROR DE SUPABASE: " + error.message, true);
+        console.error("Supabase Storage error:", error);
         return;
     }
 
@@ -64,7 +66,6 @@ async function render() {
 input.addEventListener("change", async () => {
     const files = [...input.files];
     input.value = "";
-
     if (!files.length) return;
 
     const validFiles = files.filter(file => {
@@ -81,25 +82,20 @@ input.addEventListener("change", async () => {
 
     for (const file of validFiles) {
         setStatus(`SUBIENDO ${file.name}...`);
-
         const extension = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
-        const safeExtension = extension || "jpg";
-        const filename = `${Date.now()}-${crypto.randomUUID()}.${safeExtension}`;
+        const filename = `${Date.now()}-${crypto.randomUUID()}.${extension || "jpg"}`;
 
-        const { error } = await supabase.storage
-            .from(BUCKET)
-            .upload(filename, file, {
-                cacheControl: "3600",
-                upsert: false,
-                contentType: file.type
-            });
+        const { error } = await supabase.storage.from(BUCKET).upload(filename, file, {
+            cacheControl: "3600",
+            upsert: false,
+            contentType: file.type
+        });
 
         if (error) {
-            console.error(error);
-            setStatus(`NO SE PUDO SUBIR ${file.name}.`, true);
+            console.error("Supabase upload error:", error);
+            setStatus(`NO SE PUDO SUBIR ${file.name}: ${error.message}`, true);
             continue;
         }
-
         setStatus("FOTO SUBIDA. ACTUALIZANDO GALERÍA...");
     }
 
@@ -108,4 +104,5 @@ input.addEventListener("change", async () => {
 });
 
 note.textContent = "Las fotos se guardan en Supabase y quedan visibles para todos los visitantes. Máximo 8 MB por foto.";
+setStatus("CONECTADO A SUPABASE.");
 render();
