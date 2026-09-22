@@ -6,6 +6,8 @@ const BUCKET = "bruto-fotos";
 const MAX_FILE_SIZE = 8 * 1024 * 1024;
 const MAX_DIMENSION = 1600;
 const TARGET_SIZE = 1.5 * 1024 * 1024;
+const HEIC_TYPES = new Set(["image/heic", "image/heif", "image/heic-sequence", "image/heif-sequence"]);
+let heic2anyPromise = null;
 
 const input = document.getElementById("photoInput");
 const gallery = document.getElementById("gallery");
@@ -71,13 +73,38 @@ function canvasToBlob(canvas, type, quality) {
     });
 }
 
+async function loadImageFile(file) {
+    const isHeic = HEIC_TYPES.has((file.type || "").toLowerCase()) || /\.(heic|heif)$/i.test(file.name);
+
+    if (!isHeic) return file;
+
+    // iPhones can provide HEIC/HEIF files that many browsers cannot draw on a canvas.
+    // Convert them locally in the browser before the normal resize/compression step.
+    try {
+        if (!heic2anyPromise) {
+            heic2anyPromise = import("https://esm.sh/heic2any@0.0.4").then(mod => mod.default || mod);
+        }
+        const heic2any = await heic2anyPromise;
+        const converted = await heic2any({
+            blob: file,
+            toType: "image/jpeg",
+            quality: 0.92
+        });
+        return Array.isArray(converted) ? converted[0] : converted;
+    } catch (error) {
+        console.error("HEIC conversion error:", error);
+        throw new Error("No se pudo convertir la foto HEIC. Probá activar JPG en la cámara del celular.");
+    }
+}
+
 async function compressImage(file) {
-    // createImageBitmap preserves the browser's decoded image orientation when supported.
+    const browserImage = await loadImageFile(file);
+
     let bitmap;
     try {
-        bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
+        bitmap = await createImageBitmap(browserImage, { imageOrientation: "from-image" });
     } catch {
-        bitmap = await createImageBitmap(file);
+        bitmap = await createImageBitmap(browserImage);
     }
 
     const scale = Math.min(1, MAX_DIMENSION / Math.max(bitmap.width, bitmap.height));
@@ -93,8 +120,6 @@ async function compressImage(file) {
     ctx.drawImage(bitmap, 0, 0, width, height);
     bitmap.close();
 
-    // WebP gives a substantial size reduction for photographic images.
-    // If the browser doesn't support it, fall back to JPEG.
     const webpTest = await canvasToBlob(canvas, "image/webp", 0.82);
     const webpSupported = webpTest && webpTest.type === "image/webp";
     const type = webpSupported ? "image/webp" : "image/jpeg";
@@ -102,19 +127,12 @@ async function compressImage(file) {
     let quality = 0.82;
     let blob = webpSupported ? webpTest : await canvasToBlob(canvas, type, quality);
 
-    // Reduce quality a little more if the result is still unusually large.
     while (blob.size > TARGET_SIZE && quality > 0.55) {
         quality -= 0.07;
         blob = await canvasToBlob(canvas, type, quality);
     }
 
-    return {
-        blob,
-        width,
-        height,
-        type,
-        quality
-    };
+    return { blob, width, height, type, quality };
 }
 
 input.addEventListener("change", async () => {
@@ -123,7 +141,8 @@ input.addEventListener("change", async () => {
     if (!files.length) return;
 
     const validFiles = files.filter(file => {
-        if (!file.type.startsWith("image/")) {
+        const isImage = file.type.startsWith("image/") || /\.(heic|heif)$/i.test(file.name);
+        if (!isImage) {
             setStatus("Solo se pueden subir imágenes.", true);
             return false;
         }
@@ -162,7 +181,7 @@ input.addEventListener("change", async () => {
             setStatus(`FOTO SUBIDA. ${originalMB} MB → ${finalMB} MB (${savedKB > 0 ? savedKB + " KB ahorrados" : "optimizada"}).`);
         } catch (error) {
             console.error("Image compression error:", error);
-            setStatus(`NO SE PUDO PROCESAR ${file.name}. Probá con JPG, PNG o WebP.`, true);
+            setStatus(`NO SE PUDO PROCESAR ${file.name}. Si es HEIC, probá nuevamente o usá JPG.`, true);
         }
     }
 
@@ -170,6 +189,6 @@ input.addEventListener("change", async () => {
     setStatus("LISTO. LA FOTO YA ES VISIBLE PARA TODOS.");
 });
 
-note.textContent = "Las fotos se comprimen automáticamente a WebP (máx. 1600 px) antes de guardarse en Supabase. Máximo 8 MB por foto original.";
+note.textContent = "Las fotos de cámara se comprimen automáticamente antes de guardarse en Supabase. JPG, PNG, WebP y HEIC/HEIF · máx. 8 MB original.";
 setStatus("CONECTADO A SUPABASE. COMPRESIÓN ACTIVADA.");
 render();
