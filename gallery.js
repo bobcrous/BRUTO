@@ -189,6 +189,6 @@ input.addEventListener("change", async () => {
     setStatus("LISTO. LA FOTO YA ES VISIBLE PARA TODOS.");
 });
 
-note.textContent = "Las fotos de cámara se comprimen automáticamente antes de guardarse en Supabase. JPG, PNG, WebP y HEIC/HEIF · máx. 8 MB original.";
-setStatus("CONECTADO A SUPABASE. COMPRESIÓN ACTIVADA.");
+note.textContent = "";
+setStatus("");
 render();
