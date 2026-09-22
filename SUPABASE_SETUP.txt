@@ -1,0 +1,42 @@
+BRUTO — CONFIGURACIÓN DE FOTOS COMPARTIDAS
+
+El sitio usa Supabase Storage para guardar las fotos y mostrarlas a todos los visitantes.
+
+1) En Supabase abrí Storage → New Bucket.
+2) Creá un bucket llamado exactamente:
+
+   bruto-fotos
+
+3) Marcá el bucket como PUBLIC.
+
+4) Después abrí SQL Editor y ejecutá este SQL:
+
+------------------------------------------------------------
+-- Permitir que cualquiera pueda ver/listar las fotos
+------------------------------------------------------------
+create policy "BRUTO public photo list"
+on storage.objects
+for select
+to public
+using (bucket_id = 'bruto-fotos');
+
+------------------------------------------------------------
+-- Permitir que cualquiera pueda subir fotos
+------------------------------------------------------------
+create policy "BRUTO public photo upload"
+on storage.objects
+for insert
+to public
+with check (bucket_id = 'bruto-fotos');
+
+------------------------------------------------------------
+
+No agregues políticas de DELETE ni UPDATE: así los visitantes pueden subir
+fotos y verlas, pero no pueden borrar o reemplazar las fotos de otros.
+
+IMPORTANTE:
+La publishable key está incluida en gallery.js porque está pensada para uso
+público en aplicaciones web. NO pongas nunca una sb_secret_... o service_role
+key en este sitio.
+
+El sitio limita cada archivo a 8 MB y acepta solamente imágenes.

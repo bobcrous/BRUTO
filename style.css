@@ -1,0 +1,156 @@
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #fff url("mameluco.gif") repeat;
+    color: #0055ff;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+}
+a { color: #0055ff; }
+a:visited { color: #003bb5; }
+a:hover { color: #ff00aa; background: #ffff00; }
+
+.page {
+    width: min(760px, calc(100% - 24px));
+    margin: 18px auto;
+    background: rgba(255,255,255,.92);
+    border: 3px ridge #0055ff;
+    box-shadow: 8px 8px 0 #0055ff;
+}
+.header {
+    border-bottom: 3px double #0055ff;
+    padding: 8px;
+    text-align: center;
+}
+.header a {
+    margin: 0 18px;
+    font-weight: bold;
+}
+.content { padding: 18px; }
+h1 {
+    margin: 0 0 6px;
+    font-size: 42px;
+    letter-spacing: 8px;
+    text-align: center;
+    text-shadow: 3px 3px #99ccff;
+}
+.subtitle {
+    text-align: center;
+    font-size: 12px;
+    margin-bottom: 22px;
+}
+.tracklist {
+    border-collapse: collapse;
+    width: 100%;
+}
+.tracklist td {
+    border: 1px solid #0055ff;
+    padding: 8px;
+}
+.tracknum { width: 38px; text-align: center; }
+.tracklist a { font-weight: bold; text-decoration: none; }
+.upload {
+    margin-top: 28px;
+    padding: 14px;
+    border: 2px dashed #0055ff;
+    background: #eef7ff;
+    text-align: center;
+}
+#photoInput { max-width: 100%; margin: 10px 0; }
+#gallery {
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
+}
+.photo {
+    border: 2px solid #0055ff;
+    background: white;
+    padding: 5px;
+}
+.photo img {
+    display: block;
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+.photo small {
+    display: block;
+    text-align: center;
+    padding-top: 4px;
+}
+.note {
+    font-size: 11px;
+    margin-top: 8px;
+}
+.footer {
+    border-top: 3px double #0055ff;
+    padding: 8px;
+    text-align: center;
+    font-size: 11px;
+}
+.lyrics {
+    white-space: pre-wrap;
+    line-height: 1.55;
+    border: 1px solid #0055ff;
+    padding: 18px;
+    background: rgba(255,255,255,.75);
+}
+.back {
+    display: inline-block;
+    margin-bottom: 16px;
+}
+@media (max-width: 600px) {
+    h1 { font-size: 32px; }
+    .header a { margin: 0 7px; }
+    .content { padding: 12px; }
+}
+
+.track-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+.track-nav .back { margin-bottom: 0; }
+.credits {
+    border: 1px solid #0055ff;
+    padding: 18px;
+    background: rgba(255,255,255,.75);
+}
+.credit-row {
+    margin: 0 0 12px;
+}
+.credit-label { font-weight: bold; }
+.find-section {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 3px double #0055ff;
+}
+.find-section ul {
+    margin: 12px 0 0;
+    padding-left: 24px;
+}
+.find-section li { margin: 6px 0; }
+@media (max-width: 600px) {
+    .track-nav { flex-direction: row; }
+}
+
+.title, h1, h2, h3 { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+
+.upload-status {
+    font-size: 11px;
+    margin: 6px 0;
+    min-height: 14px;
+}
+.upload-status.error {
+    font-weight: bold;
+}
+.gallery-loading {
+    padding: 10px;
+    border: 1px dotted #0055ff;
+    background: #fff;
+    font-size: 11px;
+}
