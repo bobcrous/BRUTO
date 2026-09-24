@@ -40,18 +40,18 @@
       render();
     });
     volume.addEventListener('input',function(){ audio.volume=Number(volume.value)/100; render(); });
-    audio.addEventListener('play',function(){play.textContent='[ ■ STOP ]'; setStatus('>>> PLAYING');});
+    audio.addEventListener('play',function(){play.textContent='[ ■ DETENER ]'; setStatus('>>> REPRODUCIENDO');});
     audio.addEventListener('pause',function(){
-      play.textContent='[ ▶ PLAY ]';
-      if(audio.ended) setStatus('STATUS: END'); else setStatus('STATUS: PAUSED');
+      play.textContent='[ ▶ REPRODUCIR ]';
+      if(audio.ended) setStatus('ESTADO: FINALIZADO'); else setStatus('ESTADO: EN PAUSA');
     });
-    audio.addEventListener('loadedmetadata',function(){render(); setStatus('STATUS: READY');});
+    audio.addEventListener('loadedmetadata',function(){render(); setStatus('ESTADO: LISTO');});
     audio.addEventListener('timeupdate',function(){
       if(audio.duration) progress.value=(audio.currentTime/audio.duration)*100;
       render();
     });
-    audio.addEventListener('ended',function(){progress.value=100; render(); setStatus('STATUS: END'); play.textContent='[ ▶ PLAY ]';});
-    root.querySelector('.ascii-reset').addEventListener('click',function(){audio.currentTime=0; if(!audio.paused) audio.pause(); render(); setStatus('STATUS: READY');});
+    audio.addEventListener('ended',function(){progress.value=100; render(); setStatus('ESTADO: FINALIZADO'); play.textContent='[ ▶ REPRODUCIR ]';});
+    root.querySelector('.ascii-reset').addEventListener('click',function(){audio.currentTime=0; if(!audio.paused) audio.pause(); render(); setStatus('ESTADO: LISTO');});
     render();
   }
   document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.ascii-player').forEach(init);});
