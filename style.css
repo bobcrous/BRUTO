@@ -9,7 +9,7 @@ body {
 }
 a { color: #0055ff; }
 a:visited { color: #003bb5; }
-a:hover { color: #ff00aa; background: #ffff00; }
+a:hover { color: #ffffff; background: #ff6600; }
 
 .page {
     width: min(760px, calc(100% - 24px));

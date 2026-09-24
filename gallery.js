@@ -59,7 +59,7 @@ async function render() {
         img.loading = "lazy";
 
         const caption = document.createElement("small");
-        caption.textContent = `foto #${photos.length - i}`;
+        caption.textContent = "GACIAS";
 
         box.appendChild(img);
         box.appendChild(caption);
