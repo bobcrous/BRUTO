@@ -16,6 +16,16 @@
 <main class="content">
     <h1 style="font-size:28px;letter-spacing:3px;">MUCHOS DJS</h1>
     <div class="track-nav"><a class="back" href="index.html">[ VOLVER AL TRACKLIST ]</a><a class="back" href="credits-3.html">[ CREDITOS ]</a></div>
+    <div class="ascii-player" data-audio="audio/03-muchos-djs.mp3">
+        <div class="ascii-rule">::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</div>
+        <div class="ascii-controls"><button type="button" class="ascii-play">[ ▶ PLAY ]</button><button type="button" class="ascii-reset">[ RESET ]</button></div>
+        <div class="ascii-line"><span class="ascii-time">00:00</span><div class="ascii-progress-bar">├───────────────────────────────────────────────●─┤</div><span class="ascii-duration">00:00</span></div>
+        <input class="ascii-progress" type="range" min="0" max="100" value="0" step="0.1" aria-label="Progreso de reproducción">
+        <div class="ascii-line"><span>VOL</span><div class="ascii-volume-bar">├───────────────────────────────────────────────●─┤</div><span class="ascii-pct ascii-volume-pct">70%</span></div>
+        <input class="ascii-volume" type="range" min="0" max="100" value="70" step="1" aria-label="Volumen">
+        <div class="ascii-status">STATUS: READY</div>
+        <div class="ascii-rule">::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</div>
+    </div>
     <div class="lyrics">TENGO UN, DOS, TRES Y CUATRO
 DJS A MI LADO
 ANTES ERAN TODOS TINCHOS
@@ -95,6 +105,7 @@ ACÁ YA NADIE BAILA</div>
 </main>
 <footer class="footer">BRUTO // MUCHOS DJS</footer>
 </div>
+<script src="player.js"></script>
 <script src="temporal.js"></script>
 </body>
 </html>
